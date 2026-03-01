@@ -57,11 +57,19 @@
             <small>Tracked locally on this browser</small>
             <p data-latest-unit-summary>Once you open a unit, watch a lesson, or work through practice, the dashboard will store your latest units here so you can continue without searching again.</p>
           </div>
+          <div class="activity-feed">
+            <strong>Recent actions</strong>
+            <div class="activity-list" data-latest-activity-list>
+              <p class="empty-state">Activity will appear here once you open a unit, lesson, or practice set.</p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
   </main>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./supabase-config.js"></script>
   <script src="./site.js" defer></script>
 </body>
 </html>

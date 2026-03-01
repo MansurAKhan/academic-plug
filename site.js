@@ -1,12 +1,17 @@
 const DATA_URL = './data/site-data.json';
 const STORAGE_KEYS = {
-  user: 'academic_plug_user',
-  users: 'academic_plug_users',
   subject: 'academic_plug_subject',
-  recentUnits: 'academic_plug_recent_units'
+  recentUnits: 'academic_plug_recent_units',
+  activity: 'academic_plug_activity'
 };
 
-const state = { data: null };
+const state = {
+  data: null,
+  supabase: null,
+  currentUser: null,
+  recoveryMode: false,
+  authConfigured: false
+};
 
 function query(key) {
   return new URLSearchParams(window.location.search).get(key);
@@ -28,32 +33,80 @@ async function loadData() {
   return state.data;
 }
 
-function getStoredUser() {
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEYS.user) || 'null');
-  } catch {
+function getConfiguredSupabase() {
+  const config = window.ACADEMIC_PLUG_SUPABASE_CONFIG || {};
+  if (!config.url || !config.anonKey || config.url.includes('YOUR_') || config.anonKey.includes('YOUR_')) {
+    state.authConfigured = false;
     return null;
   }
-}
-
-function setStoredUser(user) {
-  localStorage.setItem(STORAGE_KEYS.user, JSON.stringify(user));
-}
-
-function clearStoredUser() {
-  localStorage.removeItem(STORAGE_KEYS.user);
-}
-
-function getStoredUsers() {
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEYS.users) || '[]');
-  } catch {
-    return [];
+  if (!state.supabase && window.supabase?.createClient) {
+    state.supabase = window.supabase.createClient(config.url, config.anonKey, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true
+      }
+    });
   }
+  state.authConfigured = Boolean(state.supabase);
+  return state.supabase;
 }
 
-function setStoredUsers(users) {
-  localStorage.setItem(STORAGE_KEYS.users, JSON.stringify(users));
+function mapUser(user) {
+  if (!user) return null;
+  return {
+    id: user.id,
+    email: user.email || '',
+    name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Student'
+  };
+}
+
+function getStoredUser() {
+  return state.currentUser;
+}
+
+async function hydrateAuth() {
+  const client = getConfiguredSupabase();
+  state.recoveryMode = new URLSearchParams(window.location.hash.replace(/^#/, '')).get('type') === 'recovery';
+  if (!client) {
+    state.currentUser = null;
+    return;
+  }
+
+  const { data, error } = await client.auth.getSession();
+  if (!error) {
+    state.currentUser = mapUser(data.session?.user || null);
+  }
+
+  client.auth.onAuthStateChange((event, session) => {
+    state.currentUser = mapUser(session?.user || null);
+    if (event === 'PASSWORD_RECOVERY') {
+      state.recoveryMode = true;
+      const resetForm = $('[data-auth-form="reset"]');
+      if (resetForm) switchAuthView('reset');
+    }
+  });
+}
+
+function authRedirectUrl() {
+  return new URL('./login.html', window.location.href).toString();
+}
+
+function setFeedback(node, message, kind = '') {
+  if (!node) return;
+  node.textContent = message || '';
+  node.className = `inline-feedback ${kind}`.trim();
+}
+
+async function signOutUser() {
+  const client = getConfiguredSupabase();
+  if (client) await client.auth.signOut();
+  state.currentUser = null;
+}
+
+function switchAuthView(view) {
+  $all('[data-auth-tab]').forEach((node) => node.classList.toggle('active', node.dataset.authTab === view));
+  $all('[data-auth-form]').forEach((form) => form.classList.toggle('hidden', form.dataset.authForm !== view));
 }
 
 function getStoredRecentUnits() {
@@ -68,7 +121,44 @@ function setStoredRecentUnits(units) {
   localStorage.setItem(STORAGE_KEYS.recentUnits, JSON.stringify(units));
 }
 
-function recordRecentUnit(subject, unit, reason = 'unit') {
+function getStoredActivity() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEYS.activity) || '[]');
+  } catch {
+    return [];
+  }
+}
+
+function setStoredActivity(items) {
+  localStorage.setItem(STORAGE_KEYS.activity, JSON.stringify(items));
+}
+
+function labelForReason(reason, itemTitle = '') {
+  if (reason === 'video') return `Opened video${itemTitle ? `: ${itemTitle}` : ''}`;
+  if (reason === 'questions') return `Opened practice${itemTitle ? `: ${itemTitle}` : ''}`;
+  return 'Opened unit';
+}
+
+function recordActivity(subject, unit, reason = 'unit', item = null) {
+  if (!subject || !unit) return;
+  const entry = {
+    id: `${subject.id}:${unit.id}:${reason}:${item?.id || 'none'}:${Date.now()}`,
+    subjectId: subject.id,
+    subjectName: subject.name,
+    unitId: unit.id,
+    unitTitle: unit.title,
+    reason,
+    itemId: item?.id || null,
+    itemTitle: item?.title || item?.label || '',
+    label: labelForReason(reason, item?.title || item?.label || ''),
+    updatedAt: new Date().toISOString()
+  };
+  const activity = getStoredActivity();
+  activity.unshift(entry);
+  setStoredActivity(activity.slice(0, 12));
+}
+
+function recordRecentUnit(subject, unit, reason = 'unit', item = null) {
   if (!subject || !unit) return;
   const entry = {
     subjectId: subject.id,
@@ -81,6 +171,17 @@ function recordRecentUnit(subject, unit, reason = 'unit') {
   const recent = getStoredRecentUnits().filter((item) => !(item.subjectId === subject.id && item.unitId === unit.id));
   recent.unshift(entry);
   setStoredRecentUnits(recent.slice(0, 3));
+  recordActivity(subject, unit, reason, item);
+}
+
+function relativeTime(isoString) {
+  const diffMs = Date.now() - new Date(isoString).getTime();
+  const minutes = Math.max(1, Math.floor(diffMs / 60000));
+  if (minutes < 60) return `${minutes} min ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours} hr ago`;
+  const days = Math.floor(hours / 24);
+  return `${days} day${days === 1 ? '' : 's'} ago`;
 }
 
 function getStoredSubjectId() {
@@ -150,7 +251,7 @@ function bindGlobalShell(data) {
   $all('[data-pluggpt-link]').forEach((node) => {
     const url = new URL(data.site.plugGptUrl, window.location.href);
     if (activeSubject) url.searchParams.set('subject', activeSubject.name.replace(/^IB\s+/, '').toLowerCase());
-    node.href = url.pathname + url.search;
+    node.href = url.toString();
   });
 
   $all('[data-user-name]').forEach((node) => {
@@ -173,8 +274,8 @@ function bindGlobalShell(data) {
   }
 
   $all('[data-logout]').forEach((button) => {
-    button.addEventListener('click', () => {
-      clearStoredUser();
+    button.addEventListener('click', async () => {
+      await signOutUser();
       window.location.href = './index.html';
     });
   });
@@ -187,19 +288,44 @@ function renderHome(data) {
 
 function renderLogin() {
   const user = getStoredUser();
-  const users = getStoredUsers();
+  const client = getConfiguredSupabase();
   const loginForm = $('[data-auth-form="login"]');
   const signupForm = $('[data-auth-form="signup"]');
+  const forgotForm = $('[data-auth-form="forgot"]');
+  const resetForm = $('[data-auth-form="reset"]');
   const loginError = $('[data-login-error]');
   const signupError = $('[data-signup-error]');
+  const forgotFeedback = $('[data-forgot-feedback]');
+  const resetFeedback = $('[data-reset-feedback]');
+  const authBanner = $('[data-auth-banner]');
+
+  if (user && !state.recoveryMode) {
+    window.location.href = './dashboard.html';
+    return;
+  }
+
+  if (!client) {
+    setFeedback(authBanner, 'Auth is not configured yet. Add your Supabase project URL and anon key in supabase-config.js.', 'warn');
+  }
 
   $all('[data-auth-tab]').forEach((button) => {
     button.addEventListener('click', () => {
-      const tab = button.dataset.authTab;
-      $all('[data-auth-tab]').forEach((node) => node.classList.toggle('active', node === button));
-      $all('[data-auth-form]').forEach((form) => form.classList.toggle('hidden', form.dataset.authForm !== tab));
-      if (loginError) loginError.textContent = '';
-      if (signupError) signupError.textContent = '';
+      switchAuthView(button.dataset.authTab);
+      setFeedback(loginError, '');
+      setFeedback(signupError, '');
+      setFeedback(forgotFeedback, '');
+      setFeedback(resetFeedback, '');
+      setFeedback(authBanner, client ? '' : 'Auth is not configured yet. Add your Supabase project URL and anon key in supabase-config.js.', client ? '' : 'warn');
+    });
+  });
+
+  $all('[data-auth-link]').forEach((button) => {
+    button.addEventListener('click', () => {
+      switchAuthView(button.dataset.authLink);
+      setFeedback(loginError, '');
+      setFeedback(signupError, '');
+      setFeedback(forgotFeedback, '');
+      setFeedback(resetFeedback, '');
     });
   });
 
@@ -208,29 +334,37 @@ function renderLogin() {
     if (loginEmail) loginEmail.value = user.email;
   }
 
-  loginForm?.addEventListener('submit', (event) => {
+  if (state.recoveryMode) {
+    switchAuthView('reset');
+    setFeedback(authBanner, 'Choose a new password for your account.', 'success');
+  }
+
+  loginForm?.addEventListener('submit', async (event) => {
     event.preventDefault();
     const email = $('[name="loginEmail"]')?.value.trim().toLowerCase();
     const password = $('[name="loginPassword"]')?.value || '';
-    const existingUser = users.find((item) => item.email === email);
 
     if (!email || !password) {
-      loginError.textContent = 'Enter your email and password.';
-      loginError.className = 'inline-feedback error visible';
+      setFeedback(loginError, 'Enter your email and password.', 'error');
       return;
     }
 
-    if (!existingUser || existingUser.password !== password) {
-      loginError.textContent = 'Incorrect email or password.';
-      loginError.className = 'inline-feedback error visible';
+    if (!client) {
+      setFeedback(loginError, 'Auth is not configured yet.', 'error');
       return;
     }
 
-    setStoredUser({ name: existingUser.name, email: existingUser.email });
+    const { data, error } = await client.auth.signInWithPassword({ email, password });
+    if (error) {
+      setFeedback(loginError, error.message, 'error');
+      return;
+    }
+
+    state.currentUser = mapUser(data.user);
     window.location.href = './dashboard.html';
   });
 
-  signupForm?.addEventListener('submit', (event) => {
+  signupForm?.addEventListener('submit', async (event) => {
     event.preventDefault();
     const name = $('[name="signupName"]')?.value.trim();
     const email = $('[name="signupEmail"]')?.value.trim().toLowerCase();
@@ -238,30 +372,89 @@ function renderLogin() {
     const confirmPassword = $('[name="signupConfirmPassword"]')?.value || '';
 
     if (!name || !email || !password || !confirmPassword) {
-      signupError.textContent = 'Fill in every field to create an account.';
-      signupError.className = 'inline-feedback error visible';
+      setFeedback(signupError, 'Fill in every field to create an account.', 'error');
       return;
     }
     if (password.length < 6) {
-      signupError.textContent = 'Password must be at least 6 characters.';
-      signupError.className = 'inline-feedback error visible';
+      setFeedback(signupError, 'Password must be at least 6 characters.', 'error');
       return;
     }
     if (password !== confirmPassword) {
-      signupError.textContent = 'Passwords do not match.';
-      signupError.className = 'inline-feedback error visible';
+      setFeedback(signupError, 'Passwords do not match.', 'error');
       return;
     }
-    if (users.some((item) => item.email === email)) {
-      signupError.textContent = 'An account with that email already exists.';
-      signupError.className = 'inline-feedback error visible';
+    if (!client) {
+      setFeedback(signupError, 'Auth is not configured yet.', 'error');
       return;
     }
 
-    const newUser = { name, email, password };
-    setStoredUsers([...users, newUser]);
-    setStoredUser({ name, email });
-    window.location.href = './dashboard.html';
+    const { data, error } = await client.auth.signUp({
+      email,
+      password,
+      options: {
+        data: { full_name: name },
+        emailRedirectTo: authRedirectUrl()
+      }
+    });
+    if (error) {
+      setFeedback(signupError, error.message, 'error');
+      return;
+    }
+
+    state.currentUser = mapUser(data.user);
+    if (data.session) {
+      window.location.href = './dashboard.html';
+      return;
+    }
+    setFeedback(signupError, 'Account created. Check your email to confirm your address, then log in.', 'success');
+  });
+
+  forgotForm?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const email = $('[name="forgotEmail"]')?.value.trim().toLowerCase();
+    if (!email) {
+      setFeedback(forgotFeedback, 'Enter your email address.', 'error');
+      return;
+    }
+    if (!client) {
+      setFeedback(forgotFeedback, 'Auth is not configured yet.', 'error');
+      return;
+    }
+    const { error } = await client.auth.resetPasswordForEmail(email, {
+      redirectTo: authRedirectUrl()
+    });
+    if (error) {
+      setFeedback(forgotFeedback, error.message, 'error');
+      return;
+    }
+    setFeedback(forgotFeedback, 'Password reset link sent. Check your inbox.', 'success');
+  });
+
+  resetForm?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const password = $('[name="resetPassword"]')?.value || '';
+    const confirmPassword = $('[name="resetConfirmPassword"]')?.value || '';
+    if (password.length < 6) {
+      setFeedback(resetFeedback, 'Password must be at least 6 characters.', 'error');
+      return;
+    }
+    if (password !== confirmPassword) {
+      setFeedback(resetFeedback, 'Passwords do not match.', 'error');
+      return;
+    }
+    if (!client) {
+      setFeedback(resetFeedback, 'Auth is not configured yet.', 'error');
+      return;
+    }
+    const { error } = await client.auth.updateUser({ password });
+    if (error) {
+      setFeedback(resetFeedback, error.message, 'error');
+      return;
+    }
+    state.recoveryMode = false;
+    window.history.replaceState({}, document.title, './login.html');
+    setFeedback(resetFeedback, 'Password updated. You can log in now.', 'success');
+    switchAuthView('login');
   });
 }
 
@@ -274,7 +467,9 @@ function renderDashboard(data) {
   const latestMeta = $('[data-latest-unit-meta]');
   const latestSummary = $('[data-latest-unit-summary]');
   const latestOpen = $('[data-latest-unit-open]');
+  const latestActivityList = $('[data-latest-activity-list]');
   const recent = getStoredRecentUnits();
+  const activity = getStoredActivity();
 
   $('[data-dashboard-heading]').innerHTML = `Welcome back,<br><span>${user.name}</span>!`;
 
@@ -314,6 +509,18 @@ function renderDashboard(data) {
     latestSummary.textContent = unit?.summary || 'Continue working through this unit from where you left off.';
     latestOpen.classList.remove('hidden');
     latestOpen.href = routeFor('./unit.html', { subject: recent[0].subjectId, unit: recent[0].unitId });
+  }
+
+  if (latestActivityList) {
+    latestActivityList.innerHTML = activity.length
+      ? activity.slice(0, 5).map((entry) => `
+        <a class="activity-row" href="${routeFor('./unit.html', { subject: entry.subjectId, unit: entry.unitId })}">
+          <strong>${entry.label}</strong>
+          <span>${entry.subjectName} • ${entry.unitTitle}</span>
+          <small>${relativeTime(entry.updatedAt)}</small>
+        </a>
+      `).join('')
+      : '<p class="empty-state">Activity will appear here once you open a unit, lesson, or practice set.</p>';
   }
 }
 
@@ -403,7 +610,7 @@ function renderVideo(data) {
   const unit = getUnit(subject);
   const item = findItem(unit.videos, query('video'));
   const embed = item?.url ? toYouTubeEmbed(item.url) : null;
-  recordRecentUnit(subject, unit, 'video');
+  recordRecentUnit(subject, unit, 'video', item);
 
   $('[data-video-page-title]').textContent = `${subject.name} - ${unit.title}`;
   $('[data-video-title]').textContent = item?.title || 'Video resource';
@@ -435,7 +642,7 @@ function renderQuestions(data) {
   const subject = getSubject(data);
   const unit = getUnit(subject);
   const item = findItem(unit.practices, query('practice'));
-  recordRecentUnit(subject, unit, 'questions');
+  recordRecentUnit(subject, unit, 'questions', item);
 
   $('[data-questions-title]').textContent = `${subject.name} - ${unit.title}`;
   $('[data-practice-title]').textContent = item?.title || 'Practice resource';
@@ -505,6 +712,7 @@ function renderQuestions(data) {
 
 async function start() {
   const page = document.body.dataset.page;
+  await hydrateAuth();
   const data = await loadData();
   bindGlobalShell(data);
 

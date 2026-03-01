@@ -377,7 +377,8 @@ h3,
 .subject-tile,
 .subject-row,
 .continue-items a,
-.material-row {
+.material-row,
+.activity-row {
   width: 100%;
   border: 1px solid rgba(23, 23, 23, 0.08);
   background: var(--panel-strong);
@@ -410,6 +411,7 @@ h3,
 .subject-row span,
 .continue-items small,
 .material-row small,
+.activity-row small,
 .feature-meta small,
 .watch-header p,
 .video-label-row p,
@@ -425,11 +427,31 @@ h3,
 .subject-row strong,
 .continue-items a,
 .material-row strong,
+.activity-row strong,
 .video-label-row h2,
 .review-card h3,
 .statement-card strong,
 .homework-card strong {
   font-size: 1.15rem;
+}
+
+.activity-feed,
+.activity-list {
+  display: grid;
+  gap: 12px;
+}
+
+.activity-feed {
+  margin-top: 16px;
+}
+
+.activity-row {
+  gap: 6px;
+}
+
+.activity-row span {
+  color: var(--muted);
+  font-size: 0.95rem;
 }
 
 .mock-player,
@@ -614,9 +636,14 @@ h3,
 }
 
 .forgot-link {
+  width: fit-content;
+  padding: 0;
+  border: 0;
+  background: transparent;
   color: var(--muted);
   text-decoration: none;
   font-size: 0.95rem;
+  cursor: pointer;
 }
 
 .page-title {
@@ -773,6 +800,10 @@ h3,
 .inline-feedback.success { color: #1b6c37; }
 
 [data-login-error]:empty,
+[data-signup-error]:empty,
+[data-forgot-feedback]:empty,
+[data-reset-feedback]:empty,
+[data-auth-banner]:empty,
 [data-review-result]:empty {
   display: none;
 }

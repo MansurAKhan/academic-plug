@@ -22,7 +22,8 @@
     <section class="login-card-wrap auth-card">
       <p class="eyebrow center">Access your study dashboard</p>
       <h1 class="login-heading">Account</h1>
-      <p class="login-copy">Create an account once, then log in normally. The site will remember you across visits on this browser.</p>
+      <p class="login-copy">Create an account once, then log in normally. Password resets are handled through email, not browser storage.</p>
+      <p class="inline-feedback" data-auth-banner></p>
 
       <div class="auth-tabs" role="tablist" aria-label="Authentication options">
         <button class="auth-tab active" type="button" data-auth-tab="login">Login</button>
@@ -39,6 +40,7 @@
           <input class="rounded-input" name="loginPassword" type="password" placeholder="Enter password" autocomplete="current-password" />
         </label>
         <p class="inline-feedback error" data-login-error></p>
+        <button class="forgot-link" type="button" data-auth-link="forgot">Forgot password?</button>
         <button class="pill-btn yellow large" type="submit">Log In</button>
       </form>
 
@@ -62,9 +64,34 @@
         <p class="inline-feedback error" data-signup-error></p>
         <button class="pill-btn yellow large" type="submit">Create Account</button>
       </form>
+
+      <form class="auth-form hidden" data-auth-form="forgot">
+        <label>
+          <span>Email</span>
+          <input class="rounded-input" name="forgotEmail" type="email" placeholder="name@example.com" autocomplete="email" />
+        </label>
+        <p class="inline-feedback" data-forgot-feedback></p>
+        <button class="pill-btn yellow large" type="submit">Send reset link</button>
+        <button class="pill-btn ghost large" type="button" data-auth-link="login">Back to login</button>
+      </form>
+
+      <form class="auth-form hidden" data-auth-form="reset">
+        <label>
+          <span>New password</span>
+          <input class="rounded-input" name="resetPassword" type="password" placeholder="Create a new password" autocomplete="new-password" />
+        </label>
+        <label>
+          <span>Confirm new password</span>
+          <input class="rounded-input" name="resetConfirmPassword" type="password" placeholder="Confirm your new password" autocomplete="new-password" />
+        </label>
+        <p class="inline-feedback" data-reset-feedback></p>
+        <button class="pill-btn yellow large" type="submit">Update password</button>
+      </form>
     </section>
   </main>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./supabase-config.js"></script>
   <script src="./site.js" defer></script>
 </body>
 </html>
