@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Reset Password - The Academic Plug</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body class="ap-body" data-page="forgot">
+  <header class="ap-header ap-shell simple-header">
+    <a class="ap-brand" href="./index.html" aria-label="The Academic Plug home">
+      <img class="ap-brand-logo" src="./assets/plug-logo.png" alt="The Academic Plug logo" />
+      <span class="ap-brand-text solo">The Academic Plug</span>
+    </a>
+    <a class="pill-btn ghost small" href="./login.html">Back to login</a>
+  </header>
+
+  <main class="ap-shell login-main auth-main">
+    <section class="login-card-wrap auth-card">
+      <p class="eyebrow center">Password recovery</p>
+      <h1 class="login-heading">Reset password</h1>
+      <p class="login-copy">Enter your account email and we’ll send a reset link.</p>
+      <p class="inline-feedback" data-forgot-page-banner></p>
+
+      <form class="auth-form" data-forgot-page-form>
+        <label>
+          <span>Email</span>
+          <input class="rounded-input" name="forgotPageEmail" type="email" placeholder="name@example.com" autocomplete="email" />
+        </label>
+        <p class="inline-feedback" data-forgot-page-feedback></p>
+        <button class="pill-btn yellow large" type="submit">Send reset link</button>
+        <a class="pill-btn ghost large" href="./login.html">Back to login</a>
+      </form>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./supabase-config.js"></script>
+  <script src="./site.js" defer></script>
+</body>
+</html>

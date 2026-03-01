@@ -467,6 +467,44 @@ function renderLogin() {
   });
 }
 
+function renderForgotPage() {
+  const client = getConfiguredSupabase();
+  const form = $('[data-forgot-page-form]');
+  const banner = $('[data-forgot-page-banner]');
+  const feedback = $('[data-forgot-page-feedback]');
+  const user = getStoredUser();
+
+  if (user && !state.recoveryMode) {
+    window.location.href = './dashboard.html';
+    return;
+  }
+
+  if (!client) {
+    setFeedback(banner, 'Auth is not configured yet. Add your Supabase project URL and anon key in supabase-config.js.', 'warn');
+  }
+
+  form?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const email = $('[name="forgotPageEmail"]')?.value.trim().toLowerCase();
+    if (!email) {
+      setFeedback(feedback, 'Enter your email address.', 'error');
+      return;
+    }
+    if (!client) {
+      setFeedback(feedback, 'Auth is not configured yet.', 'error');
+      return;
+    }
+    const { error } = await client.auth.resetPasswordForEmail(email, {
+      redirectTo: authRedirectUrl()
+    });
+    if (error) {
+      setFeedback(feedback, error.message, 'error');
+      return;
+    }
+    setFeedback(feedback, 'Password reset link sent. Check your inbox.', 'success');
+  });
+}
+
 function renderDashboard(data) {
   const user = getStoredUser() || { name: 'Student' };
   const continueList = $('[data-continue-list]');
@@ -727,6 +765,7 @@ async function start() {
 
   if (page === 'home') renderHome(data);
   if (page === 'login') renderLogin();
+  if (page === 'forgot') renderForgotPage();
   if (page === 'dashboard') renderDashboard(data);
   if (page === 'course') renderCourse(data);
   if (page === 'library') renderLibrary(data);
