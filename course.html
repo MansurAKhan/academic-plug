@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Subject - The Academic Plug</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body class="ap-body" data-page="course">
+  <header class="ap-header ap-shell simple-header">
+    <a class="ap-brand" href="./index.html">
+      <img class="ap-brand-logo" src="./assets/plug-logo.png" alt="The Academic Plug logo" />
+      <span class="ap-brand-text solo">The Academic Plug</span>
+    </a>
+    <div class="dashboard-icons">
+      <a class="pill-btn ghost tiny" href="./dashboard.html">Dashboard</a>
+      <a class="pill-btn yellow tiny" data-pluggpt-link href="#">PlugGPT</a>
+    </div>
+  </header>
+
+  <main class="ap-shell course-main">
+    <h1 class="page-title" data-course-title></h1>
+    <p class="page-subtitle" data-course-subtitle></p>
+
+    <section class="subject-action-grid" data-subject-actions></section>
+
+    <section class="panel side-info-panel resource-library-panel">
+      <div class="panel-topline">Extra resources</div>
+      <div class="resource-pill-list" data-course-resource-list></div>
+      <p class="resource-note">Bookmarks are paused for now and will return once the core study flow is fully in place.</p>
+    </section>
+  </main>
+
+  <script src="./site.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dashboard - The Academic Plug</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body class="ap-body" data-page="dashboard">
+  <header class="ap-header ap-shell simple-header">
+    <a class="ap-brand" href="./index.html">
+      <img class="ap-brand-logo" src="./assets/plug-logo.png" alt="The Academic Plug logo" />
+      <span class="ap-brand-text solo">The Academic Plug</span>
+    </a>
+    <div class="dashboard-icons">
+      <a class="pill-btn ghost tiny" href="./index.html">Home</a>
+      <a class="pill-btn yellow tiny" data-pluggpt-link href="#">PlugGPT</a>
+      <span class="user-chip"><span data-user-name></span> <span class="avatar">A</span></span>
+    </div>
+  </header>
+
+  <main class="ap-shell dashboard-main">
+    <section class="welcome-block">
+      <h1 data-dashboard-heading></h1>
+      <p>Pick up from your latest units or jump directly into a subject library.</p>
+    </section>
+
+    <section class="dashboard-grid">
+      <div class="panel continue-panel">
+        <div class="panel-topline">Continue studying</div>
+        <div class="continue-items" data-continue-list></div>
+        <p class="empty-state hidden" data-continue-empty>Your latest 3 units will appear here after you start using lessons, videos, or practice sets.</p>
+      </div>
+
+      <div class="panel subjects-panel">
+        <div class="panel-topline">Subjects</div>
+        <div class="subject-list" data-subject-list></div>
+      </div>
+    </section>
+
+    <section class="panel watch-panel">
+      <div class="watch-header">
+        <div>
+          <div class="panel-topline">Latest activity</div>
+          <h2 data-latest-unit-title>Select a unit to begin</h2>
+          <p data-latest-unit-meta>Your dashboard will adapt to the work you actually open.</p>
+        </div>
+        <a class="pill-btn yellow small hidden" data-latest-unit-open href="#">Open unit</a>
+      </div>
+      <div class="watch-grid">
+        <div class="watch-right full-span">
+          <div class="ai-summary-box">
+            <strong>How this works</strong>
+            <small>Tracked locally on this browser</small>
+            <p data-latest-unit-summary>Once you open a unit, watch a lesson, or work through practice, the dashboard will store your latest units here so you can continue without searching again.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="./site.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Video - The Academic Plug</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body class="ap-body" data-page="video">
+  <header class="ap-header ap-shell simple-header">
+    <a class="ap-brand" href="./index.html">
+      <img class="ap-brand-logo" src="./assets/plug-logo.png" alt="The Academic Plug logo" />
+      <span class="ap-brand-text solo">The Academic Plug</span>
+    </a>
+    <div class="dashboard-icons">
+      <a class="pill-btn ghost tiny" href="./unit.html">Unit</a>
+      <a class="pill-btn yellow tiny" data-pluggpt-link href="#">PlugGPT</a>
+    </div>
+  </header>
+
+  <main class="ap-shell video-main">
+    <h1 class="page-title small-gap" data-video-page-title></h1>
+    <section class="panel video-page-panel">
+      <div class="video-top-grid single-stack">
+        <div>
+          <div class="video-embed-shell" data-video-shell>
+            <iframe data-video-frame title="Lesson video" allowfullscreen loading="lazy"></iframe>
+          </div>
+          <div class="video-label-row">
+            <div>
+              <h2 data-video-title></h2>
+              <p data-video-meta></p>
+            </div>
+          </div>
+        </div>
+        <div class="summary-card">
+          <strong>Lesson notes</strong>
+          <small>Resource detail</small>
+          <p data-video-summary></p>
+          <a class="pill-btn yellow small hidden" data-video-open-external href="#" target="_blank" rel="noreferrer">Open external resource</a>
+        </div>
+      </div>
+
+      <div class="nav-button-row">
+        <a class="pill-btn yellow large" data-video-back href="#">Back</a>
+        <a class="pill-btn ghost large" data-video-next href="#">Open practice</a>
+      </div>
+    </section>
+  </main>
+
+  <script src="./site.js" defer></script>
+</body>
+</html>

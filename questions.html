@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Practice - The Academic Plug</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body class="ap-body" data-page="questions">
+  <header class="ap-header ap-shell simple-header">
+    <a class="ap-brand" href="./index.html">
+      <img class="ap-brand-logo" src="./assets/plug-logo.png" alt="The Academic Plug logo" />
+      <span class="ap-brand-text solo">The Academic Plug</span>
+    </a>
+    <div class="dashboard-icons">
+      <a class="pill-btn ghost tiny" href="./unit.html">Unit</a>
+      <a class="pill-btn yellow tiny" data-pluggpt-link href="#">PlugGPT</a>
+    </div>
+  </header>
+
+  <main class="ap-shell questions-main">
+    <h1 class="page-title question-title" data-questions-title></h1>
+
+    <section class="question-block practice-detail-block">
+      <div class="bookmark-corner">?</div>
+      <h2 data-practice-title></h2>
+      <p class="question-copy" data-practice-description></p>
+      <div class="practice-detail-actions">
+        <a class="pill-btn yellow small hidden" data-practice-open href="#" target="_blank" rel="noreferrer">Open practice resource</a>
+      </div>
+    </section>
+
+    <section class="panel practice-support-panel hidden" data-generated-questions-panel>
+      <div class="panel-topline">Generated question set</div>
+      <form class="generated-mcq-form" data-generated-mcq-form>
+        <ol class="practice-question-list" data-generated-question-list></ol>
+        <div class="generated-mcq-actions">
+          <button class="pill-btn yellow small" type="submit">Check answers</button>
+          <div class="inline-feedback" data-generated-score></div>
+        </div>
+      </form>
+    </section>
+
+    <section class="panel practice-support-panel">
+      <div class="panel-topline">How to use this resource</div>
+      <div class="unit-item-list" data-practice-notes></div>
+    </section>
+  </main>
+
+  <script src="./site.js" defer></script>
+</body>
+</html>

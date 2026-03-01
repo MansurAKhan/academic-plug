@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Unit - The Academic Plug</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body class="ap-body" data-page="unit">
+  <header class="ap-header ap-shell simple-header">
+    <a class="ap-brand" href="./index.html">
+      <img class="ap-brand-logo" src="./assets/plug-logo.png" alt="The Academic Plug logo" />
+      <span class="ap-brand-text solo">The Academic Plug</span>
+    </a>
+    <div class="dashboard-icons">
+      <a class="pill-btn ghost tiny" href="./library.html">Back to library</a>
+      <a class="pill-btn yellow tiny" data-pluggpt-link href="#">PlugGPT</a>
+    </div>
+  </header>
+
+  <main class="ap-shell course-main">
+    <h1 class="page-title" data-unit-title></h1>
+    <p class="page-subtitle" data-unit-subtitle></p>
+
+    <section class="unit-detail-grid tri-grid">
+      <div class="panel">
+        <div class="panel-topline">Video lessons</div>
+        <div class="unit-item-list" data-unit-videos></div>
+      </div>
+      <div class="panel">
+        <div class="panel-topline">Practice questions</div>
+        <div class="unit-item-list" data-unit-practices></div>
+      </div>
+      <div class="panel">
+        <div class="panel-topline">Resources</div>
+        <div class="unit-item-list" data-unit-resources></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="./site.js" defer></script>
+</body>
+</html>

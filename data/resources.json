@@ -1,0 +1,231 @@
+{
+  "site": {
+    "name": "The Academic Plug",
+    "tagline": "A centralized study hub for IB and high school students.",
+    "description": "Focused notes, curated videos, practice materials, and structured revision support across major subjects.",
+    "stats": [
+      {"label": "Subjects", "value": "8"},
+      {"label": "Core Resource Sets", "value": "50+"},
+      {"label": "Project Focus", "value": "Access + clarity"}
+    ]
+  },
+  "subjects": [
+    {
+      "id": "math",
+      "name": "Math",
+      "theme": "IB AA SL / HL",
+      "accent": "#2563eb",
+      "summary": "Topic playlists for SL and HL plus a strong past paper archive.",
+      "sections": [
+        {
+          "title": "SL Video Playlists",
+          "items": [
+            {"label": "Topic 1", "url": "https://www.youtube.com/watch?v=IHvDWt8986w&list=PL6LH0ngwf3HuNbFePMI16Jrm3At8Dj5Nm", "type": "video"},
+            {"label": "Topic 2", "url": "https://www.youtube.com/watch?v=fszGgAluzvY&list=PL6LH0ngwf3HuomZNCwMhNUeTDSu5U0cfj", "type": "video"},
+            {"label": "Topic 3", "url": "https://www.youtube.com/watch?v=uOxnrUkPl_0&list=PL6LH0ngwf3HuDy-vNwSAHcikAsxYjnpfE", "type": "video"},
+            {"label": "Topic 4", "url": "https://www.youtube.com/watch?v=pjVORrvOP3k&list=PL6LH0ngwf3HuZA17WQhFV37IF16vn_LE9", "type": "video"},
+            {"label": "Topic 5", "url": "https://www.youtube.com/watch?v=wcNc0lgCibY&list=PL6LH0ngwf3HsUd_g82b-CSveVjpO8skll", "type": "video"}
+          ]
+        },
+        {
+          "title": "HL Video Playlists",
+          "items": [
+            {"label": "Topic 1", "url": "https://www.youtube.com/watch?v=XO8RiMggsmY&list=PLrVxQwkfAdPQ8QaIkt_9nCgI9A_s9S6dc", "type": "video"},
+            {"label": "Topic 2", "url": "https://www.youtube.com/watch?v=cZNEkqrbtiE&list=PLrVxQwkfAdPRfmWlKiLCVesXx9RcBfn2p", "type": "video"},
+            {"label": "Topic 3", "url": "https://www.youtube.com/watch?v=7KqysheU_SM&list=PLrVxQwkfAdPSmLFeB8OLnd9DUnU29yOId&pp=0gcJCbUEOCosWNin", "type": "video"},
+            {"label": "Topic 4", "url": "https://www.youtube.com/watch?v=9tBHOhfloCk&list=PLrVxQwkfAdPSycoarc7hTj4uZ6g8n7p9o", "type": "video"},
+            {"label": "Topic 5", "url": "https://www.youtube.com/watch?v=F7j6SAy2CHA&list=PLrVxQwkfAdPQLOaYTY9UKU96lU0jeQXIA", "type": "video"}
+          ]
+        },
+        {
+          "title": "Practice",
+          "items": [
+            {"label": "Past Papers for SL and HL", "url": "https://www.christosnikolaidis.com/en/maa-tests/", "type": "practice"}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "physics",
+      "name": "Physics",
+      "theme": "IB Physics",
+      "accent": "#0f766e",
+      "summary": "Topic playlists, a past paper/data booklet link, and multiple-choice revision material.",
+      "sections": [
+        {
+          "title": "Topic Playlists",
+          "items": [
+            {"label": "Topic A", "url": "https://www.youtube.com/watch?v=e7MIqFX9M4I&list=PL6LH0ngwf3Hvo9m3JnlCEAlIXXbLyYUVi", "type": "video"},
+            {"label": "Topic B", "url": "https://www.youtube.com/watch?v=HMgaiBXsS7w&list=PL6LH0ngwf3HuxGs04xVu5_dvoJ5-MC98s", "type": "video"},
+            {"label": "Topic C", "url": "https://www.youtube.com/watch?v=3InWZl99syw&list=PL6LH0ngwf3HtDtvgaxFX1scr6KneFhhav", "type": "video"},
+            {"label": "Topic D", "url": "https://www.youtube.com/watch?v=f7JqygkhBHA&list=PL6LH0ngwf3Hs1ygrwVDMkWWk_taRIyhOX&pp=0gcJCbUEOCosWNin", "type": "video"},
+            {"label": "Topic E", "url": "https://www.youtube.com/watch?v=HSh4Rgs8ljo&list=PL6LH0ngwf3HtjXwMayX_xQTnTf4EUIIAp", "type": "video"}
+          ]
+        },
+        {
+          "title": "Reference",
+          "items": [
+            {"label": "Past Papers and Data Booklet", "url": "https://www.thrivingscholars.com/post/free-ib-physics-study-resources-for-2025-your-ultimate-guide-by-rajat-sir", "type": "practice"}
+          ]
+        },
+        {
+          "title": "Question Bank",
+          "items": [
+            {"label": "Theme 1 HL Multiple Choice Set", "type": "notes", "detail": "A custom set of 100 multiple choice questions begins in the source document with mechanics, projectile motion, circular motion, collisions, escape velocity, and force-model reasoning."}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "biology",
+      "name": "Biology",
+      "theme": "IB Biology",
+      "accent": "#16a34a",
+      "summary": "Topic videos paired with syllabus and specimen-paper support.",
+      "sections": [
+        {
+          "title": "Topic Playlists",
+          "items": [
+            {"label": "Topic A", "url": "https://www.youtube.com/watch?v=1e8mbEeaIGU&list=PL6LH0ngwf3Hv8l6ejeBnQafqhVTn5gj4V", "type": "video"},
+            {"label": "Topic B", "url": "https://www.youtube.com/watch?v=eV--VWunHUU&list=PL6LH0ngwf3HtUtxzpJZ6ciWr3heFN4yoa", "type": "video"},
+            {"label": "Topic C", "url": "https://www.youtube.com/watch?v=fSuwI9bjgJs&list=PL6LH0ngwf3HsJ_qGoUSwrD46Z4NrI-_wR", "type": "video"},
+            {"label": "Topic D", "url": "https://www.youtube.com/watch?v=CSisaIHxAPk&list=PL6LH0ngwf3HuvX9-lpYdt5SEjhlLva1yX", "type": "video"}
+          ]
+        },
+        {
+          "title": "Core Resources",
+          "items": [
+            {"label": "Syllabus Overview", "url": "https://www.biologyforlife.com/syllabus.html", "type": "notes"},
+            {"label": "Biology HL & SL Specimen Papers", "url": "https://www.ibo.org/globalassets/new-structure/programmes/dp/pdfs/biology-hl-sl-specimen-papers-1a-2b-2-en.pdf", "type": "practice"},
+            {"label": "Revision Village Past Papers", "url": "https://www.revisionvillage.com/ib-biology/hl/past-papers/", "type": "practice"}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "english",
+      "name": "English",
+      "theme": "IB English",
+      "accent": "#9333ea",
+      "summary": "Paper support, IO/HL essay guidance, and broader revision links.",
+      "sections": [
+        {
+          "title": "Assessment Support",
+          "items": [
+            {"label": "Paper 1 Playlist", "url": "https://www.youtube.com/watch?v=ectNzS7x0Y4&list=PLwpv1ucGhUOnpzyfBRgqmyYmOORuNxzZ2", "type": "video"},
+            {"label": "Paper 2 Playlist", "url": "https://www.youtube.com/watch?v=rPKS-iyBwUk&list=PLwpv1ucGhUOkS6_itf2UvnptG40CXs9ta", "type": "video"},
+            {"label": "HL Essay", "url": "https://www.youtube.com/watch?v=wWoru95S1is&list=PLwpv1ucGhUOn7XLS1yf16L6R2EY3jbVIE", "type": "video"},
+            {"label": "IO Guidance", "url": "https://www.youtube.com/watch?v=NM0O6YhOth8&list=PLwpv1ucGhUOm_qgKx6VZFXlRcLTnmKWok", "type": "video"}
+          ]
+        },
+        {
+          "title": "General Revision",
+          "items": [
+            {"label": "English Resource Folder", "url": "https://drive.google.com/drive/u/0/folders/10S_sbQVvUIMPTfmox9NjBLjtYsrz3RR3", "type": "notes"},
+            {"label": "IB Revision Center", "url": "https://sites.google.com/view/ibrevisioncenter/english-lang-lit", "type": "notes"},
+            {"label": "Revision Village Key Concepts", "url": "https://www.revisionvillage.com/ib-english/literature-hl/key-concepts/?utm_source=chatgpt.com&keyConceptId=e598ba01-bb47-4a83-bf07-ac2d9aafb72a", "type": "notes"}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "spanish",
+      "name": "Spanish",
+      "theme": "IB Spanish B",
+      "accent": "#dc2626",
+      "summary": "Paper resources, past papers, and themed flashcard practice.",
+      "sections": [
+        {
+          "title": "Core Resources",
+          "items": [
+            {"label": "Paper 1 Content", "url": "https://docs.google.com/document/d/1xmTXygjEnFqr6fmNaeJ7c_45grv3qK2aFJBap55Bzdo/edit?usp=sharing", "type": "notes"},
+            {"label": "Paper 2 Writing Formats", "url": "https://pj-s3-attachments.s3.amazonaws.com/uploads/editor_attachment/file/3362/Writing_Formats.pdf", "type": "notes"},
+            {"label": "Past Papers", "url": "https://ibspanish.com/resources/ib-spanish-b-sl-past-exam-papers/", "type": "practice"}
+          ]
+        },
+        {
+          "title": "Flashcards",
+          "items": [
+            {"label": "Theme 1: Identidades", "type": "notes", "detail": "20 flashcards covering self-esteem, peer pressure, identity, values, and useful Paper 1/2 expressions."},
+            {"label": "Theme 2: Experiencias", "type": "notes", "detail": "20 flashcards focused on travel, growth, challenge, exchange, achievement, and reflection language."},
+            {"label": "Theme 3: Ingenio Humano", "type": "notes", "detail": "20 flashcards on technology, social media, innovation, privacy, AI, cyberbullying, and persuasive structures."}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tok",
+      "name": "TOK",
+      "theme": "Theory of Knowledge",
+      "accent": "#f59e0b",
+      "summary": "Exhibition guidance, essay links, EE support, CAS documentation, and prompt bank access.",
+      "sections": [
+        {
+          "title": "TOK Exhibition",
+          "items": [
+            {"label": "IB Mastery Exhibition Guide", "url": "https://www.ibmastery.com/blog/the-tok-exhibition", "type": "notes"},
+            {"label": "Kognity TOK Questions", "url": "https://kognity.com/resources/tok-questions-2/", "type": "notes"},
+            {"label": "KIS Academics Exhibition Guide", "url": "https://kisacademics.com/blog/how-to-ace-ib-tok-exhibition/", "type": "notes"},
+            {"label": "Past Exhibition Examples", "url": "https://sites.google.com/guajome.net/mrs-tran/theory-of-knowledge/tok-exhibition", "type": "practice"}
+          ]
+        },
+        {
+          "title": "Essay and Extended Essay",
+          "items": [
+            {"label": "TOK Essay Guide", "url": "https://www.savemyexams.com/learning-hub/useful-resources/ib-tok-essay-guide", "type": "notes"},
+            {"label": "Extended Essay Video 1", "url": "https://www.youtube.com/watch?v=FNGfpNqzXEc", "type": "video"},
+            {"label": "Extended Essay Video 2", "url": "https://www.youtube.com/watch?v=LBx4s18HUjg", "type": "video"},
+            {"label": "Extended Essay Video 3", "url": "https://www.youtube.com/watch?v=6Hn5pCv6ObY", "type": "video"}
+          ]
+        },
+        {
+          "title": "Prompt Bank + CAS",
+          "items": [
+            {"label": "35 TOK Exhibition Questions", "type": "notes", "detail": "Includes prompts on certainty, objectivity, culture, ethics, experts, technology, curiosity, and justification."},
+            {"label": "CAS Guide", "url": "https://img1.wsimg.com/blobby/go/b53e5d3e-24ba-4189-b545-2c61dbc26480/downloads/CAS%20Guide.pdf?ver=1744803275978", "type": "notes"},
+            {"label": "CAS Video", "url": "https://youtube.com/watch?v=dBb4BBbJORE", "type": "video"}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "computer-science",
+      "name": "Computer Science",
+      "theme": "IB Computer Science",
+      "accent": "#4f46e5",
+      "summary": "Course playlist, IA workflow, and drive folders for papers and resources.",
+      "sections": [
+        {
+          "title": "Course + IA",
+          "items": [
+            {"label": "Course Playlist", "url": "https://www.youtube.com/watch?v=aVI9OrPOGJg&list=PLZbVESc4rBHlBi2gwdlppxQJX4EOmsSxx&pp=0gcJCbUEOCosWNin", "type": "video"},
+            {"label": "IA Playlist", "url": "https://www.youtube.com/watch?v=q_Vue2cABSI&list=PLZbVESc4rBHkMp5sywd89W07IACJ8oWIm&pp=0gcJCbUEOCosWNin", "type": "video"},
+            {"label": "IA Resource Folder", "url": "https://drive.google.com/drive/folders/1fPy_xuyEJFQrCv-9bzKnyrc-2yOHr3KI", "type": "notes"}
+          ]
+        },
+        {
+          "title": "Past Papers",
+          "items": [
+            {"label": "Paper 1 Folder", "url": "https://drive.google.com/drive/folders/1JNfIael5RzGqlrb4wtpJA6VOEdj2ixRS", "type": "practice"},
+            {"label": "Paper 2 Folder", "url": "https://drive.google.com/drive/folders/1EgmxTMd5-XdXEfvmhlN0jaGyGDwpuqfY", "type": "practice"}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "economics",
+      "name": "Economics",
+      "theme": "IB Economics",
+      "accent": "#ea580c",
+      "summary": "A worked Paper 2 style case study centered on Nepal and growth policy analysis.",
+      "sections": [
+        {
+          "title": "Case Study",
+          "items": [
+            {"label": "Nepal Paper 2 Example", "type": "notes", "detail": "Includes GDP, unemployment, permit demand, elasticity, multiplier definition, AD/AS explanation, labour force participation, inequality constraints, and policy recommendation prompts."}
+          ]
+        }
+      ]
+    }
+  ]
+}

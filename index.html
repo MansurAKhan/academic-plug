@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>The Academic Plug</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body class="ap-body" data-page="home">
+  <header class="ap-header ap-shell simple-header">
+    <a class="ap-brand" href="./index.html" aria-label="The Academic Plug home">
+      <img class="ap-brand-logo" src="./assets/plug-logo.png" alt="The Academic Plug logo" />
+      <span class="ap-brand-text solo">The Academic Plug</span>
+    </a>
+    <div class="header-account" data-home-account>
+      <a class="pill-btn yellow small" data-home-login href="./login.html">Login</a>
+      <div class="user-chip hidden" data-home-user>
+        <span data-user-name></span>
+        <a class="chip-link" href="./dashboard.html">Dashboard</a>
+        <button class="chip-link danger" data-logout type="button">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="ap-shell home-main">
+    <section class="hero-stage home-hero-stage">
+      <div class="hero-copy">
+        <p class="eyebrow">Academic support, without the clutter</p>
+        <h1>Study tools, course pages, and PlugGPT support in one place.</h1>
+        <p class="hero-text" data-site-tagline></p>
+        <div class="hero-actions">
+          <a class="pill-btn yellow small" data-home-hero-login href="./login.html">Login</a>
+          <a class="pill-btn ghost small" data-home-hero-dashboard href="./dashboard.html">Go to dashboard</a>
+          <a class="pill-btn ghost small" href="#service-video">See how it works</a>
+        </div>
+      </div>
+      <div class="hero-visual hero-brand-visual" aria-hidden="true">
+        <div class="hero-logo-frame">
+          <img src="./assets/plug-logo.png" alt="" />
+        </div>
+      </div>
+    </section>
+
+    <section id="service-video" class="feature-split service-split">
+      <article class="feature-card mock-video-card large-video-card">
+        <div class="panel-topline">Academic Plug service overview</div>
+        <div class="mock-player service-player">
+          <div class="mock-player-screen service-screen">
+            <div class="play-chip">▶</div>
+          </div>
+          <div class="mock-player-bar">
+            <span>00:42</span>
+            <div class="progress-line"><span></span></div>
+            <span>02:15</span>
+          </div>
+        </div>
+      </article>
+      <article class="feature-card text-card">
+        <div class="panel-topline">What the service does</div>
+        <h2>Academic Plug organizes the parts students usually have to chase across five different tabs.</h2>
+        <p data-site-about></p>
+        <p>Use the site to move from subject pages to guided video review, quick questions, and then PlugGPT when you need an explanation that goes further.</p>
+      </article>
+    </section>
+
+    <section class="statement-panel free-panel">
+      <div>
+        <p class="eyebrow">Everything for free</p>
+        <h2>No paywall between the student and the support.</h2>
+      </div>
+      <div class="statement-grid">
+        <div class="statement-card">
+          <strong>Free access</strong>
+          <p>Course pages, video review, practice questions, and PlugGPT routing are kept open for students.</p>
+        </div>
+        <div class="statement-card">
+          <strong>No fragmented workflow</strong>
+          <p>Students can revise, check understanding, and jump into AI support without leaving the platform flow.</p>
+        </div>
+        <div class="statement-card">
+          <strong>Built around real school use</strong>
+          <p>Designed for IB and high school work instead of generic productivity software.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="statement-panel homework-panel">
+      <div>
+        <p class="eyebrow">We did our homework</p>
+        <h2>The structure is based on the actual things students need during revision.</h2>
+      </div>
+      <div class="homework-grid">
+        <div class="homework-card">
+          <span>01</span>
+          <strong>Courses first</strong>
+          <p>Students should land in a clear subject path, not a random library of links.</p>
+        </div>
+        <div class="homework-card">
+          <span>02</span>
+          <strong>Review with context</strong>
+          <p>Video lessons, transcript summaries, and question sets reinforce the same topic from different angles.</p>
+        </div>
+        <div class="homework-card">
+          <span>03</span>
+          <strong>PlugGPT when needed</strong>
+          <p>When the standard materials are not enough, students can hand off directly into PlugGPT for guided help.</p>
+        </div>
+        <div class="homework-card accent-card">
+          <span>04</span>
+          <strong>Focused on usefulness</strong>
+          <p>The goal is not to look busy. The goal is to reduce friction and make study support faster to access.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="footer" class="ap-footer ap-shell">
+    <span>Feedback and requests:</span>
+    <a data-feedback-email href="#"></a>
+  </footer>
+
+  <script src="./site.js" defer></script>
+</body>
+</html>

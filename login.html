@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Login - The Academic Plug</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body class="ap-body" data-page="login">
+  <header class="ap-header ap-shell simple-header">
+    <a class="ap-brand" href="./index.html" aria-label="The Academic Plug home">
+      <img class="ap-brand-logo" src="./assets/plug-logo.png" alt="The Academic Plug logo" />
+      <span class="ap-brand-text solo">The Academic Plug</span>
+    </a>
+    <a class="pill-btn ghost small" href="./index.html">Home</a>
+  </header>
+
+  <main class="ap-shell login-main auth-main">
+    <section class="login-card-wrap auth-card">
+      <p class="eyebrow center">Access your study dashboard</p>
+      <h1 class="login-heading">Account</h1>
+      <p class="login-copy">Create an account once, then log in normally. The site will remember you across visits on this browser.</p>
+
+      <div class="auth-tabs" role="tablist" aria-label="Authentication options">
+        <button class="auth-tab active" type="button" data-auth-tab="login">Login</button>
+        <button class="auth-tab" type="button" data-auth-tab="signup">Sign Up</button>
+      </div>
+
+      <form class="auth-form" data-auth-form="login">
+        <label>
+          <span>Email</span>
+          <input class="rounded-input" name="loginEmail" type="email" placeholder="name@example.com" autocomplete="email" />
+        </label>
+        <label>
+          <span>Password</span>
+          <input class="rounded-input" name="loginPassword" type="password" placeholder="Enter password" autocomplete="current-password" />
+        </label>
+        <p class="inline-feedback error" data-login-error></p>
+        <button class="pill-btn yellow large" type="submit">Log In</button>
+      </form>
+
+      <form class="auth-form hidden" data-auth-form="signup">
+        <label>
+          <span>Full name</span>
+          <input class="rounded-input" name="signupName" type="text" placeholder="Enter your name" autocomplete="name" />
+        </label>
+        <label>
+          <span>Email</span>
+          <input class="rounded-input" name="signupEmail" type="email" placeholder="name@example.com" autocomplete="email" />
+        </label>
+        <label>
+          <span>Password</span>
+          <input class="rounded-input" name="signupPassword" type="password" placeholder="Create password" autocomplete="new-password" />
+        </label>
+        <label>
+          <span>Confirm password</span>
+          <input class="rounded-input" name="signupConfirmPassword" type="password" placeholder="Confirm password" autocomplete="new-password" />
+        </label>
+        <p class="inline-feedback error" data-signup-error></p>
+        <button class="pill-btn yellow large" type="submit">Create Account</button>
+      </form>
+    </section>
+  </main>
+
+  <script src="./site.js" defer></script>
+</body>
+</html>
