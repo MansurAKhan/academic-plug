@@ -289,6 +289,7 @@ function renderHome(data) {
 function renderLogin() {
   const user = getStoredUser();
   const client = getConfiguredSupabase();
+  const mode = query('mode');
   const loginForm = $('[data-auth-form="login"]');
   const signupForm = $('[data-auth-form="signup"]');
   const forgotForm = $('[data-auth-form="forgot"]');
@@ -337,6 +338,8 @@ function renderLogin() {
   if (state.recoveryMode) {
     switchAuthView('reset');
     setFeedback(authBanner, 'Choose a new password for your account.', 'success');
+  } else if (mode === 'forgot') {
+    switchAuthView('forgot');
   }
 
   loginForm?.addEventListener('submit', async (event) => {
