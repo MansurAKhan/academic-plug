@@ -300,7 +300,7 @@ function renderLogin() {
   const resetFeedback = $('[data-reset-feedback]');
   const authBanner = $('[data-auth-banner]');
 
-  if (user && !state.recoveryMode) {
+  if (user && !state.recoveryMode && mode !== 'forgot') {
     window.location.href = './dashboard.html';
     return;
   }
@@ -322,7 +322,13 @@ function renderLogin() {
 
   $all('[data-auth-link]').forEach((button) => {
     button.addEventListener('click', () => {
-      switchAuthView(button.dataset.authLink);
+      const targetView = button.dataset.authLink;
+      if (targetView === 'forgot') {
+        window.history.replaceState({}, document.title, './login.html?mode=forgot');
+      } else if (query('mode')) {
+        window.history.replaceState({}, document.title, './login.html');
+      }
+      switchAuthView(targetView);
       setFeedback(loginError, '');
       setFeedback(signupError, '');
       setFeedback(forgotFeedback, '');
