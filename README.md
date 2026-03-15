@@ -27,7 +27,7 @@ Copy:
 
 Edit:
 
-- `/Users/amna/Desktop/Mansur/Skyline HS/CAS Project/Academic Plug/site/supabase-config.js`
+- `../Academic Plug/site/supabase-config.js`
 
 Replace:
 
