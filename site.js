@@ -220,6 +220,59 @@ function routeFor(page, params = {}) {
   return url.pathname + url.search;
 }
 
+function resourceLinkMarkup(item, label = 'Open resource') {
+  if (!item?.url) return '';
+  return `<a class="chip-link" href="${item.url}" target="_blank" rel="noreferrer">${label}</a>`;
+}
+
+function renderResourcePills(items) {
+  return items.map((item) => `
+    <div class="resource-pill">
+      <strong>${item.label}</strong>
+      <small>${item.kind}</small>
+      ${resourceLinkMarkup(item, 'Open')}
+    </div>
+  `).join('');
+}
+
+function libraryViews() {
+  return [
+    { id: 'all', label: 'All units' },
+    { id: 'videos', label: 'Video lessons' },
+    { id: 'questions', label: 'Question bank' },
+    { id: 'resources', label: 'Resources' }
+  ];
+}
+
+function conciseFeedback(text) {
+  if (!text) return 'Review the method and compare it with the strongest answer choice.';
+  const cleaned = text
+    .replace(/\s+/g, ' ')
+    .replace(/The lesson supports this when it explains:.*/i, '')
+    .replace(/A related lesson statement is:.*/i, '')
+    .replace(/Relevant teaching point:.*/i, '')
+    .trim();
+  if (!cleaned) return 'Review the method and compare it with the strongest answer choice.';
+  return cleaned.length > 220 ? `${cleaned.slice(0, 217).trim()}...` : cleaned;
+}
+
+function concisePrompt(text) {
+  if (!text) return '';
+  return text
+    .replace(/^In the IB .*? lesson on .*?,\s*/i, '')
+    .replace(/\s+in the lesson on .*?\?$/i, '?')
+    .replace(/\s+in an IB-style question on .*?\?$/i, '?')
+    .trim();
+}
+
+function practiceMeta(item, unit) {
+  const bits = [];
+  bits.push('IB Paper 1 style');
+  if (item?.questions?.length) bits.push(`${item.questions.length} MCQs`);
+  if (unit?.title) bits.push(unit.title);
+  return bits;
+}
+
 function toYouTubeEmbed(url) {
   if (!url) return null;
   try {
@@ -242,6 +295,8 @@ function toYouTubeEmbed(url) {
 function bindGlobalShell(data) {
   const user = getStoredUser();
   const activeSubject = getSubject(data);
+  const activeUnit = query('unit') ? getUnit(activeSubject, query('unit')) : null;
+  const activeView = query('view') || 'all';
 
   $all('[data-feedback-email]').forEach((node) => {
     node.textContent = data.site.feedbackEmail;
@@ -271,6 +326,29 @@ function bindGlobalShell(data) {
   if (heroLogin && heroDashboard) {
     heroLogin.classList.toggle('hidden', !!user);
     heroDashboard.classList.toggle('hidden', !user);
+  }
+
+  const courseDashboardLink = $('[data-course-dashboard-link]');
+  if (courseDashboardLink) courseDashboardLink.href = routeFor('./dashboard.html');
+
+  const librarySubjectLink = $('[data-library-subject-link]');
+  if (librarySubjectLink && activeSubject) {
+    librarySubjectLink.href = routeFor('./course.html', { subject: activeSubject.id });
+  }
+
+  const unitLibraryLink = $('[data-unit-library-link]');
+  if (unitLibraryLink && activeSubject) {
+    unitLibraryLink.href = routeFor('./library.html', { subject: activeSubject.id, view: activeView === 'all' ? null : activeView });
+  }
+
+  const videoUnitLink = $('[data-video-unit-link]');
+  if (videoUnitLink && activeSubject && activeUnit) {
+    videoUnitLink.href = routeFor('./unit.html', { subject: activeSubject.id, unit: activeUnit.id });
+  }
+
+  const questionsUnitLink = $('[data-questions-unit-link]');
+  if (questionsUnitLink && activeSubject && activeUnit) {
+    questionsUnitLink.href = routeFor('./unit.html', { subject: activeSubject.id, unit: activeUnit.id });
   }
 
   $all('[data-logout]').forEach((button) => {
@@ -576,7 +654,7 @@ function renderCourse(data) {
   $('[data-course-title]').textContent = subject.name;
   $('[data-course-subtitle]').textContent = subject.description;
   $('[data-course-resource-list]').innerHTML = subject.resources.length
-    ? subject.resources.map((item) => `<div class="resource-pill"><strong>${item.label}</strong><small>${item.kind}</small>${item.url ? `<a href="${item.url}" target="_blank" rel="noreferrer">Open</a>` : ''}</div>`).join('')
+    ? renderResourcePills(subject.resources)
     : '<p class="empty-state">No extra resources added for this subject yet.</p>';
 
   $('[data-subject-actions]').innerHTML = [
@@ -598,46 +676,110 @@ function renderCourse(data) {
 function renderLibrary(data) {
   const subject = getSubject(data);
   const view = query('view') || 'all';
+  const viewConfig = {
+    all: { title: 'Showing all units.', empty: 'No units are available yet.' },
+    videos: { title: 'Showing video lessons by unit.', empty: 'No units with video lessons are available yet.' },
+    questions: { title: 'Showing question banks by unit.', empty: 'No units with question banks are available yet.' },
+    resources: { title: 'Showing resource libraries by unit.', empty: 'No units with resources are available yet.' }
+  };
   $('[data-library-title]').textContent = `${subject.name} Library`;
-  $('[data-library-subtitle]').textContent = 'Choose a unit, then open the specific videos, question resources, or study materials connected to that topic.';
-  $('[data-library-filter-note]').textContent = view === 'all' ? 'Showing all units.' : `Showing ${view} by unit.`;
+  $('[data-library-subtitle]').textContent = 'Move unit by unit. Each section is split the way students actually revise: lessons, question banks, and support material.';
+  $('[data-library-filter-note]').textContent = viewConfig[view]?.title || viewConfig.all.title;
+
+  const nav = $('[data-library-nav]');
+  if (nav) {
+    nav.innerHTML = libraryViews().map((item) => `
+      <a class="library-tab ${item.id === view ? 'active' : ''}" href="${routeFor('./library.html', { subject: subject.id, view: item.id === 'all' ? null : item.id })}">
+        ${item.label}
+      </a>
+    `).join('');
+  }
+
+  const subjectResourcesPanel = $('[data-library-subject-resources-panel]');
+  const subjectResources = $('[data-library-subject-resources]');
+  if ((view === 'resources' || view === 'all') && subject.resources.length) {
+    subjectResourcesPanel?.classList.remove('hidden');
+    if (subjectResources) subjectResources.innerHTML = renderResourcePills(subject.resources);
+  } else {
+    subjectResourcesPanel?.classList.add('hidden');
+  }
 
   const filteredUnits = subject.units.filter((unit) => {
     if (view === 'videos') return unit.videos.length > 0;
     if (view === 'questions') return unit.practices.length > 0;
-    if (view === 'resources') return unit.resources.length > 0 || subject.resources.length > 0;
+    if (view === 'resources') return unit.resources.length > 0;
     return true;
   });
 
-  $('[data-unit-library]').innerHTML = filteredUnits.map((unit) => `
-    <article class="unit-library-card">
-      <div class="unit-card-head">
-        <div>
-          <h2>${unit.title}</h2>
-          <p>${unit.summary}</p>
+  $('[data-unit-library]').innerHTML = filteredUnits.map((unit, index) => {
+    const items = [];
+    if (view === 'all' || view === 'videos') {
+      items.push(...unit.videos.map((item) => `
+        <a class="library-item-link" href="${routeFor('./video.html', { subject: subject.id, unit: unit.id, video: item.id })}">
+          <span>Video lesson</span>
+          <strong>${item.title}</strong>
+        </a>
+      `));
+    }
+    if (view === 'all' || view === 'questions') {
+      items.push(...unit.practices.map((item) => `
+        <a class="library-item-link" href="${routeFor('./questions.html', { subject: subject.id, unit: unit.id, practice: item.id })}">
+          <span>Question bank</span>
+          <strong>${item.title}</strong>
+        </a>
+      `));
+    }
+    if (view === 'all' || view === 'resources') {
+      items.push(...unit.resources.map((item) => `
+        <a class="library-item-link" href="${item.url || routeFor('./unit.html', { subject: subject.id, unit: unit.id })}" ${item.url ? 'target="_blank" rel="noreferrer"' : ''}>
+          <span>Resource</span>
+          <strong>${item.label}</strong>
+        </a>
+      `));
+    }
+
+    return `
+      <article class="unit-library-card revision-card">
+        <div class="unit-card-index">${String(index + 1).padStart(2, '0')}</div>
+        <div class="unit-card-head">
+          <div>
+            <h2>${unit.title}</h2>
+            <p>${unit.summary}</p>
+          </div>
+          <a class="pill-btn yellow small" href="${routeFor('./unit.html', { subject: subject.id, unit: unit.id, view: view === 'all' ? null : view })}">Open unit</a>
         </div>
-        <a class="pill-btn yellow small" href="${routeFor('./unit.html', { subject: subject.id, unit: unit.id })}">Open unit</a>
-      </div>
-      <div class="unit-card-meta">
-        ${unit.videos.length ? `<span>${unit.videos.length} video item${unit.videos.length === 1 ? '' : 's'}</span>` : ''}
-        ${unit.practices.length ? `<span>${unit.practices.length} practice item${unit.practices.length === 1 ? '' : 's'}</span>` : ''}
-        ${unit.resources.length ? `<span>${unit.resources.length} resource item${unit.resources.length === 1 ? '' : 's'}</span>` : ''}
-      </div>
-      <div class="unit-card-links">
-        ${view !== 'questions' ? unit.videos.map((item) => `<a href="${routeFor('./video.html', { subject: subject.id, unit: unit.id, video: item.id })}">${item.title}</a>`).join('') : ''}
-        ${view !== 'videos' ? unit.practices.map((item) => `<a href="${routeFor('./questions.html', { subject: subject.id, unit: unit.id, practice: item.id })}">${item.title}</a>`).join('') : ''}
-        ${view === 'resources' || view === 'all' ? unit.resources.map((item) => `<span class="resource-link-chip">${item.label}</span>`).join('') : ''}
-      </div>
-    </article>
-  `).join('') || '<p class="empty-state">No matching units are available for this view yet.</p>';
+        <div class="unit-card-meta">
+          <span>${unit.videos.length} lesson${unit.videos.length === 1 ? '' : 's'}</span>
+          <span>${unit.practices.length} question set${unit.practices.length === 1 ? '' : 's'}</span>
+          <span>${unit.resources.length} resource${unit.resources.length === 1 ? '' : 's'}</span>
+        </div>
+        <div class="unit-card-links">
+          ${items.join('') || '<p class="empty-state">No items for this library view yet.</p>'}
+        </div>
+      </article>
+    `;
+  }).join('') || `<p class="empty-state">${viewConfig[view]?.empty || viewConfig.all.empty}</p>`;
 }
 
 function renderUnit(data) {
   const subject = getSubject(data);
   const unit = getUnit(subject);
+  const preferredView = query('view') || 'all';
   recordRecentUnit(subject, unit, 'unit');
+  $('[data-unit-subject-name]').textContent = subject.name;
   $('[data-unit-title]').textContent = unit.title;
   $('[data-unit-subtitle]').textContent = unit.summary;
+  $('[data-unit-library-link]').href = routeFor('./library.html', { subject: subject.id, view: preferredView === 'all' ? null : preferredView });
+  $('[data-unit-meta]').innerHTML = [
+    `${unit.videos.length} video lesson${unit.videos.length === 1 ? '' : 's'}`,
+    `${unit.practices.length} question set${unit.practices.length === 1 ? '' : 's'}`,
+    `${(unit.resources.length + subject.resources.length)} total resource${(unit.resources.length + subject.resources.length) === 1 ? '' : 's'}`
+  ].map((item) => `<span>${item}</span>`).join('');
+  $('[data-unit-actions]').innerHTML = [
+    { label: 'Video library', href: routeFor('./library.html', { subject: subject.id, view: 'videos' }) },
+    { label: 'Question bank', href: routeFor('./library.html', { subject: subject.id, view: 'questions' }) },
+    { label: 'Resources', href: routeFor('./library.html', { subject: subject.id, view: 'resources' }) }
+  ].map((item) => `<a class="pill-btn ghost small" href="${item.href}">${item.label}</a>`).join('');
 
   $('[data-unit-videos]').innerHTML = unit.videos.length
     ? unit.videos.map((item) => `<a class="unit-item-card" href="${routeFor('./video.html', { subject: subject.id, unit: unit.id, video: item.id })}"><strong>${item.title}</strong><small>${item.kind}</small><p>${item.detail || 'Open this lesson resource.'}</p></a>`).join('')
@@ -647,8 +789,9 @@ function renderUnit(data) {
     ? unit.practices.map((item) => `<a class="unit-item-card" href="${routeFor('./questions.html', { subject: subject.id, unit: unit.id, practice: item.id })}"><strong>${item.title}</strong><small>${item.kind}</small><p>${item.detail || 'Open this practice resource.'}</p></a>`).join('')
     : '<p class="empty-state">No dedicated practice resources are linked for this unit yet.</p>';
 
-  $('[data-unit-resources]').innerHTML = unit.resources.length
-    ? unit.resources.map((item) => `<div class="unit-item-card"><strong>${item.label}</strong><small>${item.kind}</small><p>${item.detail || 'Reference material for this unit.'}</p>${item.url ? `<a class="chip-link" href="${item.url}" target="_blank" rel="noreferrer">Open resource</a>` : ''}</div>`).join('')
+  const combinedResources = [...unit.resources, ...subject.resources];
+  $('[data-unit-resources]').innerHTML = combinedResources.length
+    ? combinedResources.map((item) => `<div class="unit-item-card"><strong>${item.label}</strong><small>${item.kind}</small><p>${item.detail || 'Reference material for this unit.'}</p>${resourceLinkMarkup(item)}</div>`).join('')
     : '<p class="empty-state">No extra resources are linked for this unit yet.</p>';
 }
 
@@ -692,6 +835,8 @@ function renderQuestions(data) {
   recordRecentUnit(subject, unit, 'questions', item);
 
   $('[data-questions-title]').textContent = `${subject.name} - ${unit.title}`;
+  $('[data-questions-unit-link]').href = routeFor('./unit.html', { subject: subject.id, unit: unit.id });
+  $('[data-practice-meta]').innerHTML = practiceMeta(item, unit).map((bit) => `<span>${bit}</span>`).join('');
   $('[data-practice-title]').textContent = item?.title || 'Practice resource';
   $('[data-practice-description]').textContent = item?.detail || 'Open the linked practice resource for this unit.';
 
@@ -711,7 +856,7 @@ function renderQuestions(data) {
     generatedPanel.classList.remove('hidden');
     generatedList.innerHTML = item.questions.map((question, index) => `
       <li class="practice-question-item">
-        <p><strong>Question ${index + 1}</strong><br>${question.prompt}</p>
+        <p><strong>Paper 1 MCQ ${index + 1}</strong><br>${concisePrompt(question.prompt)}</p>
         <div class="practice-choice-list">
           ${question.choices.map((choice, choiceIndex) => `
             <label class="choice-option question-option">
@@ -736,8 +881,11 @@ function renderQuestions(data) {
           return;
         }
         const isCorrect = Number(selected.value) === question.answer;
+        const answerLabel = question.choices?.[question.answer];
         if (isCorrect) correct += 1;
-        feedback.textContent = isCorrect ? 'Correct.' : question.explanation;
+        feedback.textContent = isCorrect
+          ? `Correct. ${conciseFeedback(question.explanation)}`
+          : `Not quite. Correct answer: ${answerLabel}. ${conciseFeedback(question.explanation)}`;
         feedback.className = `inline-feedback ${isCorrect ? 'success' : 'error'}`;
       });
       generatedScore.textContent = `Score: ${correct} / ${item.questions.length}`;

@@ -16,7 +16,7 @@
       <span class="ap-brand-text solo">The Academic Plug</span>
     </a>
     <div class="dashboard-icons">
-      <a class="pill-btn ghost tiny" href="./course.html">Subject</a>
+      <a class="pill-btn ghost tiny" data-library-subject-link href="./course.html">Subject</a>
       <a class="pill-btn yellow tiny" data-pluggpt-link href="#">PlugGPT</a>
     </div>
   </header>
@@ -25,7 +25,12 @@
     <h1 class="page-title" data-library-title></h1>
     <p class="page-subtitle" data-library-subtitle></p>
     <div class="library-filter-note" data-library-filter-note></div>
-    <section class="unit-library-grid" data-unit-library></section>
+    <nav class="library-tab-row" data-library-nav aria-label="Library views"></nav>
+    <section class="panel subject-resource-panel hidden" data-library-subject-resources-panel>
+      <div class="panel-topline">Subject-wide resources</div>
+      <div class="resource-pill-list" data-library-subject-resources></div>
+    </section>
+    <section class="unit-library-grid revision-grid" data-unit-library></section>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
