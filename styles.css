@@ -830,6 +830,10 @@ h3,
 
 .footer-group-right {
   margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
 }
 
 .footer-link {
