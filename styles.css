@@ -881,6 +881,24 @@ h3,
   line-height: 1.6;
 }
 
+.works-cited-bullets {
+  margin: 0;
+  padding-left: 20px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.works-cited-bullets li + li {
+  margin-top: 10px;
+}
+
+.works-cited-note {
+  margin: 22px 0 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
 @media (max-width: 980px) {
   .hero-stage,
   .feature-split,
